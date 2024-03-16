@@ -12,8 +12,6 @@ The rest of this README contains instructions to create this project from scratc
   * [Add a Repository](#add-a-repository)
   * [Add a Real Database](#add-a-real-database)
   * [Finalize the Backend](#finalize-the-backend)
-- [Push to Docker Registry](#push-to-docker-registry)
-- [Deploy to a Kubernetes Cluster](#deploy-to-a-kubernetes-cluster)
 
 ## Build From Scratch
 
@@ -512,25 +510,5 @@ export class AppController {
 }
 ```
 
-Run the whole application using Docker Compose:
-
-```bash
-docker-cmpose up -d
-```
-
-Then visit the application at [`localhost:3000`](http://localhost:3000) and you should see a "Hello World!" message.
-To shorten a new link, use the following cURL command:
-
-```bash
-curl -XPOST -d "url1=https://aerabi.com" localhost:3000/shorten
-```
-
-Take a look at the response:
-
-```json
-{"hash":"350fzr"}
-```
-
-The hash differs on your machine. You can use it to redirect to the original link.
-Open a web browser and visit [`localhost:3000/350fzr`](http://localhost:3000/350fzr).
-
+# Author
+@dhanushkaduluri
