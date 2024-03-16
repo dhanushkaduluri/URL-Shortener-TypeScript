@@ -1,11 +1,6 @@
 # Link Shortener
 
 This repo hosts a link shortener implemented using Nest.js and TypeScript.
-The link hashes can either be stored in a hashmap in memory or on a Redis database.
-
-A blog article based on this repo was written and is published on Docker's blog:
-
-- [How to Build and Deploy a URL Shortener Using TypeScript and Nest.js](https://www.docker.com/blog/how-to-build-and-deploy-a-url-shortener-using-typescript-and-nest-js/)
 
 The rest of this README contains instructions to create this project from scratch.
 
@@ -539,71 +534,3 @@ Take a look at the response:
 The hash differs on your machine. You can use it to redirect to the original link.
 Open a web browser and visit [`localhost:3000/350fzr`](http://localhost:3000/350fzr).
 
-## Push to Docker Registry
-
-To build the Docker image and push it to the Docker Hub, run the following command:
-
-```bash
-docker buildx build --platform linux/arm64,linux/amd64 --sbom=true --push -t aerabi/link-shortener-js:redis .
-```
-
-This command will build the Docker image for two platforms (ARM and AMD CPU architectures), package the SBOM attestations,
-and push the result to Docker Hub.
-
-Note. To push it under your own Docker Hub namespace, you have to change the tag.
-
-## Deploy to a Kubernetes Cluster
-
-Note. For this step, you need to have `kubectl` and `helm` installed.
-
-If you don't have a Kubernetes cluster already configured, you can use Docker Desktop's Kubernetes cluster running locally:
-
-```bash
-kubectl config use-context docker-desktop
-```
-
-On your Kubernetes cluster, create a namespace called `links-shortener-js`:
-
-```bash
-kubectl create namespace link-shortener-js
-```
-
-Then use the following command to deploy a cluster using the HashMap link shortener:
-
-```bash
-helm upgrade --install events -n link-shortener-js ./chart
-```
-
-Make sure everything is up and running:
-
-```bash
-kubectl get all -n link-shortener-js
-```
-
-The result should be similar to this:
-
-```
-NAME                                     READY   STATUS    RESTARTS   AGE
-pod/link-shortener-js-85995d6bcb-8lkdc   1/1     Running   0          9m10s
-
-NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-service/link-shortener-js   ClusterIP   10.128.22.104   <none>        3000/TCP   9m10s
-
-NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/link-shortener-js   1/1     1            1           9m10s
-
-NAME                                           DESIRED   CURRENT   READY   AGE
-replicaset.apps/link-shortener-js-85995d6bcb   1         1         1       9m10s
-```
-
-Then you should be able to forward the port and test your deployment:
-
-```bash
-kubectl port-forward --namespace link-shortener-js svc/link-shortener-js 3000:3000
-```
-
-Then you can test as if it's running locally:
-
-```bash
-curl localhost:3000
-```
